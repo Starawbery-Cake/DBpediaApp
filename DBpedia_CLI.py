@@ -21,7 +21,7 @@ def main():
     ],
   ]
 
-  window = sg.Window("InputText Widget Example", layout, resizable=True)
+  window = sg.Window("深化型学習支援システム", layout, resizable=True)
 
   while True:
     event, values = window.read()
