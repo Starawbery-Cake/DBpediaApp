@@ -11,13 +11,20 @@ def search_graph(root_node:Node, Graph:nx.DiGraph) -> int:
   if root_node.parent == None:
     return 0
   if root_node.node_type != "property":
-    Graph.add_edge(root_node.parent.parent.name, root_node.name, label=root_node.parent.name)
+    node_type_tag = {"entity":"E", "literal":"L"}
+    Graph.add_edge(
+      ( node_type_tag[root_node.parent.parent.node_type] + ":" + \
+        root_node.parent.parent.name + "(ID=" + str(root_node.parent.parent.node_ID) + ")"),
+      ( node_type_tag[root_node.node_type] + ":" + \
+        root_node.name + "(ID=" + str(root_node.node_ID) + ")"),
+      label=("P:" + root_node.parent.name + "(ID=" + str(root_node.parent.node_ID) + ")")
+    )
 
 
 def renew_graph_pic(root_node:Node) -> nx.DiGraph:
   Graph = nx.DiGraph()
   search_graph(root_node, Graph)
-  pos = hierarchy_pos(Graph, root_node.name)
+  pos = hierarchy_pos(Graph, ("E:" + root_node.name+"(ID="+str(root_node.node_ID)+")"))
   edge_labels = nx.get_edge_attributes(Graph, 'label')
   nx.draw(Graph, pos, with_labels=True, node_size=700, node_color="skyblue", font_family="BIZ UDGothic", font_size=10, font_color="black", font_weight="bold", arrowsize=20)
   nx.draw_networkx_edge_labels(Graph, pos, edge_labels=edge_labels, font_family="BIZ UDGothic")
