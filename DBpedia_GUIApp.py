@@ -71,6 +71,7 @@ def main():
         window[ListBoxKey].update(["["+str(i)+"]"+str(result_entities[i]["label"]) for i in range(len(result_entities))])
         list_mode = "entity"
         search_mode = "ID"
+        window[InduceSearchTextKey].update("IDを入力してください\n(リテラルは選択不可)")
     if event == ChoiceFromListKey:
       choise_ID = myfunc.extract_first_number(values[ListBoxKey][0])
       if list_mode == "entity":
@@ -99,13 +100,13 @@ def main():
         elif result_entities[choise_ID]["type"] == "literal":
           node_ID = next(ID_generator)
           nodes_dict[node_ID] = manipulate_tree.create_node(
-            name=result_entities[choise_ID]["value"],
+            name=result_entities[choise_ID]["label"],
             node_ID=node_ID,
             URI=None,
             node_type="literal",
             parent_node=current_parent_node
           )
-          window[AbstTitleKey].update("リテラル値")
+          window[AbstTitleKey].update("リテラル値：")
           window[AbstTextKey].update(nodes_dict[node_ID].name)
           window[ListBoxKey].update([])
           list_mode = None
