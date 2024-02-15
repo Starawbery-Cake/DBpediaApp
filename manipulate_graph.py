@@ -1,9 +1,10 @@
 import networkx as nx
+import matplotlib
 import matplotlib.pyplot as plt
 from anytree import Node
 
+
 def search_graph(root_node:Node, Graph:nx.DiGraph) -> int:
-  print(root_node)
   children = root_node.children
   for child in children:
     search_graph(child, Graph)
@@ -12,16 +13,18 @@ def search_graph(root_node:Node, Graph:nx.DiGraph) -> int:
   if root_node.node_type != "property":
     Graph.add_edge(root_node.parent.parent.name, root_node.name, label=root_node.parent.name)
 
+
 def renew_graph_pic(root_node:Node) -> nx.DiGraph:
   Graph = nx.DiGraph()
   search_graph(root_node, Graph)
-  # pos = nx.kamada_kawai_layout(Graph)
   pos = hierarchy_pos(Graph, root_node.name)
   edge_labels = nx.get_edge_attributes(Graph, 'label')
-  nx.draw(Graph, pos, with_labels=True, node_size=700, node_color="skyblue", font_size=10, font_color="black", font_weight="bold", arrowsize=20)
-  nx.draw_networkx_edge_labels(Graph, pos, edge_labels=edge_labels)
-  plt.show()
+  nx.draw(Graph, pos, with_labels=True, node_size=700, node_color="skyblue", font_family="BIZ UDGothic", font_size=10, font_color="black", font_weight="bold", arrowsize=20)
+  nx.draw_networkx_edge_labels(Graph, pos, edge_labels=edge_labels, font_family="BIZ UDGothic")
+  plt.plot()
   plt.savefig("graph.png", format="png")
+  plt.show()
+
 
 def hierarchy_pos(G, root=None, width=1., vert_gap=0.2, vert_loc=0, xcenter=0.5):
   '''
