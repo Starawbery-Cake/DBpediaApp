@@ -1,3 +1,4 @@
+import unicodedata
 import PySimpleGUI as sg
 import quereis
 from quereis import do_inquiry
@@ -72,6 +73,40 @@ def main():
         list_mode = "entity"
         search_mode = "ID"
         window[InduceSearchTextKey].update("IDを入力してください\n(リテラルは選択不可)")
+      elif search_mode == "ID":
+        choise_ID = int(unicodedata.normalize('NFKC', values[SearchBoxKey]))
+        window[SearchBoxKey].update("")
+        if manipulate_tree.find_node_by_ID(nodes_dict[start_ID], choise_ID) == -1:
+          window[ErrorTextKey].update("ID値が不正です.", text_color="#FFFFFF", background_color="#FF0000")
+          continue
+        window[ErrorTextKey].update("", background_color="#64778D")
+        current_parent_node = nodes_dict[choise_ID]
+        if current_parent_node.node_type == "entity":
+          window[ErrorTextKey].update("", background_color="#64778D")
+          abstract = reshapeResults.reshape_for_abst(
+            do_inquiry(quereis.create_query_for_get_abst_from_object(objectURI=current_parent_node.URI))
+          )
+          window[AbstTitleKey].update("概要：")
+          window[AbstTextKey].update(abstract)
+          result_property = do_inquiry(
+            quereis.create_query_for_get_property_from_object(objectURI=current_parent_node.URI)
+          )
+          result_property = reshapeResults.reshape_for_property(result_property)
+          window[ListBoxTitle].update("プロパティ一覧")
+          window[ListBoxKey].update(["["+str(i)+"]"+str(result_property[i]["label"]) for i in range(len(result_property))])
+          list_mode = "property"
+        elif current_parent_node.node_type == "property":
+          window[ErrorTextKey].update("", background_color="#64778D")
+          result_entities = do_inquiry(
+            quereis.create_query_for_get_object_from_set_of_entity_and_property(
+              objectURI=current_parent_node.parent.URI, propertyURI=current_parent_node.URI)
+          )
+          result_entities = reshapeResults.reshape_for_object(result_entities)
+          window[ListBoxTitle].update("エンティティ一覧")
+          window[ListBoxKey].update(["["+str(i)+"]"+str(result_entities[i]["label"]) for i in range(len(result_entities))])
+          list_mode = "entity"
+        else:
+          window[ErrorTextKey].update("選択ノードはリテラルです.リテラルは選択できません.", text_color="#FFFFFF", background_color="#FF0000")
     if event == ChoiceFromListKey:
       choise_ID = myfunc.extract_first_number(values[ListBoxKey][0])
       if list_mode == "entity":
