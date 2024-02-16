@@ -12,7 +12,7 @@ def reshape_for_object(raw_result:dict) -> List[Dict[str, str]]:
       reshape_result.append({"type":"entity", "URI":URI, "label":label})
     if item_type == "typed-literal" or item_type == "literal":
       value = raw_result["results"]["bindings"][i]["object"]["value"]
-      reshape_result.append({"type":"literal", "value":value})
+      reshape_result.append({"type":"literal", "label":value})
 
   return reshape_result
 

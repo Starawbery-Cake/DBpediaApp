@@ -1,4 +1,5 @@
 from SPARQLWrapper import SPARQLWrapper, JSON
+import ssl
 try:
   from typing import Literal
 except ImportError:
@@ -55,6 +56,7 @@ def create_query_for_get_object_from_set_of_entity_and_property(objectURI:str, p
   return query
 
 def do_inquiry(query:str) -> dict:
+  ssl._create_default_https_context = ssl._create_unverified_context
   sparqlDBpedia = SPARQLWrapper("https://ja.dbpedia.org/sparql", returnFormat="json")
   sparqlDBpedia.setReturnFormat(JSON)
 
