@@ -40,7 +40,7 @@ def main():
 
   layout = [
     [
-      sg.Frame("graph", [[sg.Image("white.png", key=ImgKey, size=(700, 500))]]),
+      sg.Frame("graph", [[sg.Image("white.png", key=ImgKey)]]),
       sg.Frame("operate", [
         [sg.Text("キーワードを入力してください：", key=InduceSearchTextKey), sg.InputText(size=(20,1), key=SearchBoxKey), sg.Button("検索", key=DoSearchKey)],
         [sg.Text("概要：", key=AbstTitleKey)],
@@ -52,7 +52,7 @@ def main():
     ],
   ]
 
-  window = sg.Window("深化型学習支援システム", layout, resizable=True, size=(1200,600))
+  window = sg.Window("深化型学習支援システム", layout, resizable=True, size=(1600,700))
 
   # event loop
   while True:
