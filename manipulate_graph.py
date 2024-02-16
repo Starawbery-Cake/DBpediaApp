@@ -32,7 +32,7 @@ def renew_graph_pic(root_node:Node) -> nx.DiGraph:
   nx.draw_networkx_edge_labels(Graph, pos, edge_labels=edge_labels, font_family=font)
   plt.plot()
   plt.savefig("graph.png", format="png")
-  plt.show()
+  # plt.show()
 
 
 def hierarchy_pos(G, root=None, width=1., vert_gap=0.2, vert_loc=0, xcenter=0.5):
