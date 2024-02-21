@@ -42,12 +42,12 @@ def main():
     [
       sg.Frame("graph", [[sg.Image("white.png", key=ImgKey, size=(650, 500))]]),
       sg.Frame("operate", [
-        [sg.Text("キーワードを入力してください：", key=InduceSearchTextKey), sg.InputText(size=(20,1), key=SearchBoxKey), sg.Button("検索", key=DoSearchKey)],
+        [sg.Text("キーワードを入力してください：", key=InduceSearchTextKey), sg.InputText(size=(27,1), key=SearchBoxKey), sg.Button("検索", key=DoSearchKey)],
         [sg.Text("概要：", key=AbstTitleKey)],
         [sg.Text("", key=AbstTextKey)],
         [sg.Text("", key=ErrorTextKey)],
         [sg.Text("検索結果", key=ListBoxTitle), sg.Button("決定", key=ChoiceFromListKey)],
-        [sg.Listbox([], size=(30, 30), key=ListBoxKey)]
+        [sg.Listbox([], size=(50, 30), key=ListBoxKey)]
       ])
     ],
   ]
@@ -69,7 +69,7 @@ def main():
           window[ErrorTextKey].update("検索結果がありません.",text_color="#FFFFFF", background_color="#FF0000")
           continue
         window[ErrorTextKey].update("", background_color="#64778D")
-        window[ListBoxKey].update(["["+str(i)+"]"+str(result_entities[i]["label"]) for i in range(len(result_entities))])
+        window[ListBoxKey].update(["["+str(i)+"]"+str(result_entities[i]["label"] + "(type:" + str(result_entities[i]["type"]) + ")") for i in range(len(result_entities))])
         list_mode = "entity"
         search_mode = "ID"
         window[InduceSearchTextKey].update("IDを入力してください\n(リテラルは選択不可)")
@@ -87,7 +87,7 @@ def main():
             do_inquiry(quereis.create_query_for_get_abst_from_object(objectURI=current_parent_node.URI))
           )
           window[AbstTitleKey].update("概要：")
-          window[AbstTextKey].update(abstract)
+          window[AbstTextKey].update(myfunc.insert_newlines(abstract))
           result_property = do_inquiry(
             quereis.create_query_for_get_property_from_object(objectURI=current_parent_node.URI)
           )
@@ -103,7 +103,7 @@ def main():
           )
           result_entities = reshapeResults.reshape_for_object(result_entities)
           window[ListBoxTitle].update("エンティティ一覧")
-          window[ListBoxKey].update(["["+str(i)+"]"+str(result_entities[i]["label"]) for i in range(len(result_entities))])
+          window[ListBoxKey].update(["["+str(i)+"]"+str(result_entities[i]["label"] + "(type:" + str(result_entities[i]["type"]) + ")") for i in range(len(result_entities))])
           list_mode = "entity"
         else:
           window[ErrorTextKey].update("選択ノードはリテラルです.リテラルは選択できません.", text_color="#FFFFFF", background_color="#FF0000")
@@ -128,8 +128,9 @@ def main():
           )
           current_parent_node = nodes_dict[node_ID]
           abstract = reshapeResults.reshape_for_abst(do_inquiry(quereis.create_query_for_get_abst_from_object(objectURI=nodes_dict[node_ID].URI)))
-          window[AbstTextKey].update(abstract)
+          window[AbstTextKey].update(myfunc.insert_newlines(abstract))
           window[ListBoxTitle].update("プロパティ一覧")
+          print(result_property)
           window[ListBoxKey].update(["["+str(i)+"]"+str(result_property[i]["label"]) for i in range(len(result_property))])
           list_mode = "property"
         elif result_entities[choise_ID]["type"] == "literal":
@@ -170,7 +171,7 @@ def main():
         )
         current_parent_node = nodes_dict[node_ID]
         window[ListBoxTitle].update("エンティティ一覧")
-        window[ListBoxKey].update(["["+str(i)+"]"+str(result_entities[i]["label"]) for i in range(len(result_entities))])
+        window[ListBoxKey].update(["["+str(i)+"]"+str(result_entities[i]["label"] + "(type:" + str(result_entities[i]["type"]) + ")") for i in range(len(result_entities))])
         list_mode = "entity"
 
 
