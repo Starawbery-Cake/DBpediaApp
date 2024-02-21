@@ -32,16 +32,22 @@ def reshape_for_property(raw_result:dict) -> List[Dict[str, str]]:
   for i in range(len(raw_result["results"]["bindings"])):
     is_URI_apended = True
     URI:str = raw_result["results"]["bindings"][i]["property"]["value"]
-    if URI.startswith("http://ja.dbpedia.org/property/"):
-      label:str = URI.replace("http://ja.dbpedia.org/property/", "")
-      if not reshape_result:
-        reshape_result.append({"type":"property", "URI":URI, "label":label})
-      else:
-        for item in reshape_result:
-        # for knownURI in reshape_result["URI"]:
-          if item["URI"] != URI:
-            is_URI_apended = False
-            break
+    label:str = extract_after_last_slash(URI)
+    if not reshape_result:
+      reshape_result.append({"type":"property", "URI":URI, "label":label})
+    else:
+      for item in reshape_result:
+      # for knownURI in reshape_result["URI"]:
+        if item["URI"] != URI:
+          is_URI_apended = False
+          break
       if not is_URI_apended:
         reshape_result.append({"type":"property", "URI":URI, "label":label})
   return reshape_result
+
+def extract_after_last_slash(text):
+    last_slash_index = text.rfind('/')
+    if last_slash_index != -1:
+        return text[last_slash_index + 1:]
+    else:
+        return text
