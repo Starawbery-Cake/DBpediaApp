@@ -1,4 +1,5 @@
 from anytree import Node, RenderTree, PreOrderIter
+from myfunc import insert_newlines
 from typing import Union
 try:
   from typing import Literal
@@ -7,7 +8,10 @@ except ImportError:
 
 
 def create_node(name:str, node_ID:int, URI:Union[str, None], node_type:Literal["entity", "property", "literal"], parent_node:Union[None, Node]) -> Node:
-  node = Node(name=name, node_ID=node_ID, URI=URI, node_type=node_type, parent=parent_node)
+  if node_type == "property":
+    node = Node(name=name, node_ID=node_ID, URI=URI, node_type=node_type, parent=parent_node)
+  else:
+    node = Node(name=insert_newlines(name, interval=7), node_ID=node_ID, URI=URI, node_type=node_type, parent=parent_node)
   return node
 
 
